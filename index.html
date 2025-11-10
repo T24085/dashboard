@@ -1,376 +1,386 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GitHub Repository Dashboard</title>
-
-  <!-- Font Awesome for icons -->
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-    integrity="sha512-1ycn6IcaQQ40/J6MdG4CkXbkqVKgfH7C1l5l9eX+9K1Y5q6CRQYfYx0S+9gqhmR9W8yZ6qgH1Hn0+Z0cw3rYkg=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"
-  />
-
-  <style>
-    /* your original styles, unchanged (trimmed only for brevity) */
-    *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,'Open Sans','Helvetica Neue',sans-serif}
-    body{background-color:#f6f8fa;color:#24292e;line-height:1.5}
-    .container{max-width:1280px;margin:0 auto;padding:0 16px}
-    header{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid #ebeff2}
-    .logo{font-size:24px;font-weight:bold;color:#1a1d21;text-decoration:none}
-    .search-container{position:relative}
-    .search-input{width:360px;padding:8px 12px;border:1px solid #d1d5db;border-radius:4px;font-size:14px;transition:border-color .15s ease}
-    .search-input:focus{outline:none;border-color:#0366d6;box-shadow:0 0 0 2px rgba(3,102,214,.15)}
-    .search-icon{position:absolute;left:12px;top:8px;color:#6b7280}
-    .filter-btn{background:#fff;border:1px solid #d1d5db;border-radius:4px;padding:8px 16px;font-size:14px;font-weight:500;color:#1a1d21;cursor:pointer;transition:background-color .2s,border-color .2s,box-shadow .2s}
-    .filter-btn:hover{background:#f1f5f9}
-    .filter-btn:focus{outline:none;border-color:#0366d6;box-shadow:0 0 0 2px rgba(3,102,214,.15)}
-    .filter-panel{margin:24px 0;border:1px solid #ebeff2;border-radius:4px;overflow:hidden}
-    .filter-title{padding:16px 24px;font-size:16px;font-weight:600;background:#f1f5f9}
-    .filter-options{display:flex;flex-wrap:wrap;padding:8px;gap:8px}
-    .filter-option{padding:6px 12px;border-radius:3px;font-size:13px;font-weight:500;color:#6b7280;cursor:pointer;transition:background-color .2s,color .2s}
-    .filter-option:hover{background:#f1f5f9;color:#1a1d21}
-    .filter-option.active{background:#f1f5f9;color:#0366d6}
-    .repo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px}
-    .repo-card{background:#fff;border-radius:4px;border:1px solid #ebeff2;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.1)}
-    .repo-header{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;border-bottom:1px solid #ebeff2}
-    .repo-name{font-weight:600;color:#1a1d21;text-decoration:none;transition:color .2s}
-    .repo-name:hover{color:#0366d6}
-    .repo-stars{display:flex;align-items:center;color:#6b7280;font-size:14px;gap:6px}
-    .repo-content{padding:20px 24px}
-    .repo-description{color:#4b5563;margin-bottom:16px;line-height:1.4;min-height:1.4em}
-    .repo-meta{display:flex;flex-wrap:wrap;gap:16px;color:#6b7280;font-size:13px;margin-bottom:16px}
-    .repo-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
-    .tag{background:#f3f4f6;color:#4b5563;padding:4px 8px;border-radius:3px;font-size:12px;font-weight:500}
-    .repo-actions{display:flex;gap:8px}
-    .action-btn{flex:1;padding:8px 12px;border-radius:4px;font-size:14px;font-weight:500;text-align:center;cursor:pointer;transition:background-color .2s,color .2s;border:none}
-    .action-btn:hover{background:#f1f5f9}
-    .primary-btn{color:white;background:#0366d6}
-    .secondary-btn{color:#4b5563;background:#f3f4f6}
-    .hidden{display:none !important}
-    @media (max-width:768px){.search-input{width:240px}.repo-grid{grid-template-columns:1fr}}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern GitHub Repositories</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js for interactivity -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide icons for better UI elements -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+        .star-icon {
+            color: #fbbf24;
+        }
+        .dark-mode {
+            background-color: #111827;
+            color: #e5e7eb;
+        }
+        .dark-mode .card {
+            background-color: #1f2937;
+            border-color: #374151;
+        }
+        .dark-mode .search-container {
+            background-color: #1f2937;
+        }
+        .dark-mode .search-container input {
+            background-color: #374151;
+            color: #e5e7eb;
+            border-color: #4b5563;
+        }
+        .dark-mode .search-icon {
+            color: #9ca3af;
+        }
+        .dark-mode .star-icon {
+            color: #fbbf24;
+        }
+        .dark-mode .fork-btn {
+            background-color: #374151;
+        }
+        .dark-mode .star-btn:hover {
+            background-color: #374151;
+        }
+        .dark-mode .search-btn {
+            background-color: #374151;
+        }
+        .dark-mode .search-btn:hover {
+            background-color: #4b5563;
+        }
+        .stars-count {
+            position: relative;
+        }
+        .stars-count::after {
+            content: '★';
+            font-size: 0.7em;
+            vertical-align: super;
+        }
+        .forks-count {
+            position: relative;
+        }
+        .forks-count::after {
+            content: '⊎';
+            font-size: 0.7em;
+            vertical-align: super;
+        }
+        .language-tag {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .language-tag.js {
+            background-color: #1e40af;
+            color: white;
+        }
+        .language-tag.css {
+            background-color: #2563eb;
+            color: white;
+        }
+        .language-tag.html {
+            background-color: #eab308;
+            color: white;
+        }
+        .language-tag.ts {
+            background-color: #3b82f6;
+            color: white;
+        }
+        .language-tag.python {
+            background-color: #1971c2;
+            color: white;
+        }
+        .language-tag.svg {
+            background-color: #e11d48;
+            color: white;
+        }
+        .language-tag.graphql {
+            background-color: #663399;
+            color: white;
+        }
+    </style>
 </head>
-<body>
-  <div class="container">
-    <header>
-      <a href="https://github.com/T24085?tab=repositories" target="_blank" class="logo">GitHub</a>
-      <div class="search-container">
-        <input type="text" class="search-input" placeholder="Search repositories..." aria-label="Search repositories" />
-        <span class="search-icon"><i class="fas fa-search"></i></span>
-      </div>
-      <button class="filter-btn" id="toggleFilters">Filters</button>
+<body x-data="{ darkMode: false, searchQuery: '', repositories: [], loading: true }" 
+      @dark-mode="darkMode = true"
+      @mounted="fetchRepositories()">
+    <!-- Header -->
+    <header class="sticky top-0 z-10 bg-white dark:bg-gray-900 shadow-sm">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                <i class="fa-brands fa-github mr-2"></i> Repositories
+            </h1>
+            
+            <div class="flex items-center space-x-4">
+                <!-- Theme toggle -->
+                <button class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors" 
+                        @click="darkMode = !darkMode">
+                    <span x-show="!darkMode" class="block w-6 h-6 text-blue-500">
+                        <i class="fa-solid fa-sun"></i>
+                    </span>
+                    <span x-show="darkMode" class="block w-6 h-6 text-gray-400">
+                        <i class="fa-solid fa-moon"></i>
+                    </span>
+                </button>
+                
+                <!-- Search input -->
+                <div class="relative w-64">
+                    <input 
+                        type="text"
+                        x-model="searchQuery"
+                        placeholder="Search repositories..."
+                        class="w-full pl-10 pr-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
+                    >
+                    <i class="fa-solid fa-search absolute left-3 top-3 text-gray-400 dark:text-gray-500"></i>
+                </div>
+                
+                <!-- Filter dropdown -->
+                <div class="relative">
+                    <button class="flex items-center px-3 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+                        <span>Filter</span>
+                        <i class="fa-solid fa-chevron-down ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
     </header>
 
-    <div class="filter-panel" id="filterPanel">
-      <div class="filter-title">Filters</div>
-      <div class="filter-options" id="filters">
-        <div class="filter-option" data-filter="all">All</div>
-        <div class="filter-option" data-filter="public">Public</div>
-        <div class="filter-option" data-filter="private">Private</div>
-        <div class="filter-option" data-filter="forks">Forks</div>
-        <div class="filter-option" data-filter="sources">Not Forks</div>
-        <div class="filter-option" data-filter="updated">Sort: Recently Updated</div>
-        <div class="filter-option" data-filter="stars">Sort: Most Stars</div>
-        <div class="filter-option" data-filter="language" data-value="">Language…</div>
-        <div class="filter-option" data-filter="topic" data-value="">Topic…</div>
-      </div>
-    </div>
+    <!-- Repository grid -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" x-show="!loading">
+            <!-- Repository cards -->
+            <template x-for="repo in filteredRepositories" :key="repo.name">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+                    <!-- Repository header -->
+                    <div class="p-5 border-b dark:border-gray-700 flex justify-between items-center">
+                        <a :href="repo.html_url" class="text-lg font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors duration-200">
+                            {{ repo.name }}
+                        </a>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-gray-500 dark:text-gray-400">
+                                <i class="far fa-star star-icon"></i>
+                                <span class="ml-1 text-gray-500 dark:text-gray-400">{{ repo.stargazers_count }}</span>
+                            </span>
+                            <span class="text-gray-500 dark:text-gray-400">
+                                <i class="far fa-code-merge"></i>
+                                <span class="ml-1 text-gray-500 dark:text-gray-400">{{ repo.forks_count }}</span>
+                            </span>
+                        </div>
+                    </div>
 
-    <div class="repo-grid" id="repoGrid"></div>
-  </div>
-
-  <script>
-    // ============ CONFIG ============
-    const USERNAME = "T24085";
-    // Optional: paste a GitHub Personal Access Token (classic) to include private repos.
-    // Keep it empty for public-only.
-    const GITHUB_TOKEN = ""; // e.g. "ghp_xxx"
-
-    // ============ UTILITIES ============
-    const numberFmt = new Intl.NumberFormat("en-US");
-    const dateFmt = new Intl.DateTimeFormat(undefined, { dateStyle: "medium" });
-
-    function timeAgo(iso) {
-      const diffMs = Date.now() - new Date(iso).getTime();
-      const sec = Math.floor(diffMs / 1000);
-      const min = Math.floor(sec / 60);
-      const hr = Math.floor(min / 60);
-      const day = Math.floor(hr / 24);
-      if (day > 28) return dateFmt.format(new Date(iso));
-      if (day >= 1) return `${day} day${day === 1 ? "" : "s"} ago`;
-      if (hr >= 1) return `${hr} hour${hr === 1 ? "" : "s"} ago`;
-      if (min >= 1) return `${min} minute${min === 1 ? "" : "s"} ago`;
-      return `${sec} second${sec === 1 ? "" : "s"} ago`;
-    }
-
-    // Parse GitHub Link header for pagination
-    function parseLinkHeader(header) {
-      if (!header) return {};
-      return header.split(",").reduce((acc, part) => {
-        const m = part.match(/<([^>]+)>;\s*rel="([^"]+)"/);
-        if (m) acc[m[2]] = m[1];
-        return acc;
-      }, {});
-    }
-
-    async function ghFetch(url) {
-      const headers = {
-        "Accept": "application/vnd.github+json"
-      };
-      if (GITHUB_TOKEN) headers["Authorization"] = `Bearer ${GITHUB_TOKEN}`;
-      const res = await fetch(url, { headers });
-      if (!res.ok) {
-        const text = await res.text().catch(() => "");
-        throw new Error(`GitHub API ${res.status}: ${text || res.statusText}`);
-      }
-      const data = await res.json();
-      const links = parseLinkHeader(res.headers.get("Link"));
-      return { data, links };
-    }
-
-    async function fetchAllRepos(username) {
-      // Pull 100 per page, follow pagination via Link header
-      let url = `https://api.github.com/users/${encodeURIComponent(username)}/repos?per_page=100&sort=updated&direction=desc`;
-      const all = [];
-      while (url) {
-        const { data, links } = await ghFetch(url);
-        all.push(...data);
-        url = links.next || null;
-      }
-
-      // If using a token and you want private repos **owned by the authenticated user**,
-      // you could use the "user/repos" endpoint instead when username matches the token owner.
-      return all;
-    }
-
-    async function fetchTopicsFor(owner, repo) {
-      // topics are usually present; if not, you can fetch explicitly:
-      // but the main repos endpoint now includes 'topics' with the Accept above.
-      // This function is here if you want to fetch per-repo topics separately.
-      const url = `https://api.github.com/repos/${owner}/${repo}/topics`;
-      const headers = {
-        "Accept": "application/vnd.github+json"
-      };
-      if (GITHUB_TOKEN) headers["Authorization"] = `Bearer ${GITHUB_TOKEN}`;
-      const res = await fetch(url, { headers });
-      if (!res.ok) return [];
-      const json = await res.json();
-      return json.names || [];
-    }
-
-    // ============ RENDERING ============
-    function makeRepoCard(repo) {
-      const {
-        name,
-        html_url,
-        description,
-        stargazers_count,
-        forks_count,
-        watchers_count,
-        language,
-        topics = [],
-        updated_at,
-        fork,
-        private: isPrivate
-      } = repo;
-
-      const safeDesc = description || "";
-      const langLabel = language || "—";
-      const updated = timeAgo(updated_at);
-      const privacy = isPrivate ? `<span title="Private"><i class="fa-solid fa-lock"></i> Private</span>` : `<span title="Public"><i class="fa-regular fa-eye"></i> Public</span>`;
-      const forkBadge = fork ? `<span title="Fork"><i class="fa-solid fa-code-fork"></i> Fork</span>` : `<span title="Source"><i class="fa-regular fa-square"></i> Source</span>`;
-
-      const tags = topics.slice(0, 8).map(t => `<span class="tag">${t}</span>`).join("");
-
-      const card = document.createElement("div");
-      card.className = "repo-card";
-      card.dataset.language = language || "";
-      card.dataset.topics = (topics || []).join(",").toLowerCase();
-      card.dataset.privacy = isPrivate ? "private" : "public";
-      card.dataset.fork = fork ? "true" : "false";
-
-      card.innerHTML = `
-        <div class="repo-header">
-          <a class="repo-name" href="${html_url}" target="_blank" rel="noopener noreferrer">${name}</a>
-          <div class="repo-stars" title="Stars">
-            <i class="fa-regular fa-star"></i>${numberFmt.format(stargazers_count)}
-          </div>
+                    <!-- Repository content -->
+                    <div class="p-5">
+                        <p class="text-gray-600 dark:text-gray-300 mb-4" x-text="repo.description || 'No description'"></p>
+                        
+                        <!-- Repository details -->
+                        <div class="flex items-center text-sm mb-4">
+                            <div class="language-tag" :class="getLanguageClass(repo.language)">
+                                <template x-if="repo.language">
+                                    <span x-text="repo.language"></span>
+                                </template>
+                                <template x-else>
+                                    <span>HTML</span>
+                                </template>
+                            </div>
+                            <span class="mx-2 text-gray-400 dark:text-gray-500">•</span>
+                            <span class="text-gray-500 dark:text-gray-400">
+                                <i class="fas fa-code-branch"></i>
+                                <span x-text="repo.language ? repo.language : 'HTML'"></span>
+                            </span>
+                        </div>
+                        
+                        <!-- Actions -->
+                        <div class="flex justify-between mt-6 pt-4 border-t dark:border-gray-700">
+                            <button class="flex items-center text-sm text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                <i class="far fa-star mr-1 text-xl"></i>
+                                <span>Star</span>
+                            </button>
+                            <button class="flex items-center text-sm text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                <i class="far fa-code-branch mr-1 text-xl"></i>
+                                <span>Fork</span>
+                            </button>
+                            <button class="flex items-center text-sm text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                                <i class="far fa-eye mr-1 text-xl"></i>
+                                <span>View</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </template>
         </div>
-        <div class="repo-content">
-          <p class="repo-description">${safeDesc}</p>
-          <div class="repo-meta">
-            <span title="Last updated"><i class="fa-regular fa-clock"></i> ${updated}</span>
-            <span title="Language"><i class="fa-solid fa-code"></i> ${langLabel}</span>
-            <span title="Watchers"><i class="fa-regular fa-bell"></i> ${numberFmt.format(watchers_count)}</span>
-            <span title="Forks"><i class="fa-solid fa-code-fork"></i> ${numberFmt.format(forks_count)}</span>
-            ${privacy}
-            ${forkBadge}
-          </div>
-          <div class="repo-tags">${tags}</div>
-          <div class="repo-actions">
-            <a class="action-btn primary-btn" href="${html_url}/stargazers" target="_blank" rel="noopener noreferrer">
-              <i class="fa-regular fa-star"></i> Star
-            </a>
-            <a class="action-btn secondary-btn" href="${html_url}/fork" target="_blank" rel="noopener noreferrer">
-              <i class="fa-solid fa-code-fork"></i> Fork
-            </a>
-          </div>
+
+        <!-- Loading state -->
+        <div class="flex justify-center items-center h-64" x-show="loading">
+            <div class="flex flex-col items-center">
+                <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
+                <p class="text-gray-500 dark:text-gray-400">Loading repositories...</p>
+            </div>
         </div>
-      `;
-      return card;
-    }
 
-    function renderRepos(repos) {
-      const grid = document.getElementById("repoGrid");
-      grid.innerHTML = "";
-      const frag = document.createDocumentFragment();
-      repos.forEach(r => frag.appendChild(makeRepoCard(r)));
-      grid.appendChild(frag);
-    }
+        <!-- Empty state -->
+        <div class="text-center py-16" x-show="!loading && filteredRepositories.length === 0">
+            <i class="fa-solid fa-search text-6xl text-gray-300 mb-4 dark:text-gray-600"></i>
+            <h3 class="text-xl font-medium text-gray-500 dark:text-gray-400 mb-2">No repositories found</h3>
+            <p class="text-gray-500 dark:text-gray-400">Try adjusting your search or filter</p>
+        </div>
+    </main>
 
-    // ============ FILTERING & SEARCH ============
-    function applyFiltersAndSearch(repos) {
-      const searchTerm = document.querySelector(".search-input").value.trim().toLowerCase();
-      const active = document.querySelectorAll(".filter-option.active");
-      let filtered = [...repos];
-
-      active.forEach(opt => {
-        const type = opt.dataset.filter;
-        const val = (opt.dataset.value || "").toLowerCase();
-
-        if (type === "public") filtered = filtered.filter(r => !r.private);
-        if (type === "private") filtered = filtered.filter(r => r.private);
-        if (type === "forks") filtered = filtered.filter(r => r.fork);
-        if (type === "sources") filtered = filtered.filter(r => !r.fork);
-        if (type === "language" && val) filtered = filtered.filter(r => (r.language || "").toLowerCase() === val);
-        if (type === "topic" && val) filtered = filtered.filter(r => (r.topics || []).map(t => t.toLowerCase()).includes(val));
-        if (type === "updated") filtered.sort((a,b) => new Date(b.updated_at) - new Date(a.updated_at));
-        if (type === "stars") filtered.sort((a,b) => b.stargazers_count - a.stargazers_count);
-      });
-
-      if (searchTerm) {
-        filtered = filtered.filter(r => {
-          const hay = [
-            r.name,
-            r.description || "",
-            r.language || "",
-            ...(r.topics || [])
-          ].join(" ").toLowerCase();
-          return hay.includes(searchTerm);
-        });
-      }
-
-      renderRepos(filtered);
-    }
-
-    function hydrateLanguageAndTopicFilters(repos) {
-      const languages = Array.from(new Set(repos.map(r => r.language).filter(Boolean))).sort();
-      const topics = Array.from(new Set(repos.flatMap(r => r.topics || [])).values()).sort((a,b)=>a.localeCompare(b));
-
-      const filtersEl = document.getElementById("filters");
-
-      // Create language dropdown behavior
-      const langChip = filtersEl.querySelector('[data-filter="language"]');
-      if (languages.length) {
-        langChip.textContent = "Language: Any";
-        langChip.title = "Click to cycle languages";
-        let idx = -1;
-        langChip.addEventListener("click", () => {
-          idx = (idx + 1) % (languages.length + 1); // +1 for Any
-          if (idx === languages.length) {
-            langChip.dataset.value = "";
-            langChip.classList.remove("active");
-            langChip.textContent = "Language: Any";
-          } else {
-            langChip.dataset.value = languages[idx];
-            langChip.classList.add("active");
-            langChip.textContent = `Language: ${languages[idx]}`;
-          }
-          applyFiltersAndSearch(window.__ALL_REPOS__);
-        });
-      } else {
-        langChip.classList.add("hidden");
-      }
-
-      // Create topic dropdown behavior
-      const topicChip = filtersEl.querySelector('[data-filter="topic"]');
-      if (topics.length) {
-        topicChip.textContent = "Topic: Any";
-        topicChip.title = "Click to cycle topics";
-        let idx = -1;
-        topicChip.addEventListener("click", () => {
-          idx = (idx + 1) % (topics.length + 1);
-          if (idx === topics.length) {
-            topicChip.dataset.value = "";
-            topicChip.classList.remove("active");
-            topicChip.textContent = "Topic: Any";
-          } else {
-            topicChip.dataset.value = topics[idx];
-            topicChip.classList.add("active");
-            topicChip.textContent = `Topic: ${topics[idx]}`;
-          }
-          applyFiltersAndSearch(window.__ALL_REPOS__);
-        });
-      } else {
-        topicChip.classList.add("hidden");
-      }
-    }
-
-    // ============ INIT ============
-    document.addEventListener("DOMContentLoaded", async () => {
-      // Toggle filter panel visibility
-      const filterPanel = document.getElementById("filterPanel");
-      document.getElementById("toggleFilters").addEventListener("click", () => {
-        filterPanel.classList.toggle("hidden");
-      });
-
-      // Make filter chips mutually exclusive for some, but allow multi-select in general
-      const chips = document.querySelectorAll(".filter-option");
-      chips.forEach(chip => {
-        chip.addEventListener("click", (e) => {
-          const t = e.currentTarget.dataset.filter;
-          // For sort chips, allow only one of the sort criteria at once
-          if (t === "updated" || t === "stars") {
-            document.querySelectorAll('.filter-option[data-filter="updated"], .filter-option[data-filter="stars"]')
-              .forEach(c => { if (c !== e.currentTarget) c.classList.remove("active"); });
-          }
-          // Toggle this chip unless it’s the cycling ones (they manage active state inside their handler)
-          if (t !== "language" && t !== "topic") {
-            e.currentTarget.classList.toggle("active");
-            applyFiltersAndSearch(window.__ALL_REPOS__);
-          }
-        });
-      });
-
-      // Search input handler
-      document.querySelector(".search-input").addEventListener("input", () => {
-        applyFiltersAndSearch(window.__ALL_REPOS__);
-      });
-
-      // Load all repos
-      try {
-        const all = await fetchAllRepos(USERNAME);
-
-        // Ensure topics exist (most should already). If you want to guarantee topics:
-        // const withTopics = await Promise.all(all.map(async r => {
-        //   if (!r.topics || !r.topics.length) r.topics = await fetchTopicsFor(r.owner.login, r.name);
-        //   return r;
-        // }));
-        const withTopics = all;
-
-        window.__ALL_REPOS__ = withTopics;
-        hydrateLanguageAndTopicFilters(withTopics);
-        applyFiltersAndSearch(withTopics);
-      } catch (err) {
-        const grid = document.getElementById("repoGrid");
-        grid.innerHTML = `<div class="repo-card"><div class="repo-content"><p class="repo-description">Error loading repositories: ${err.message}</p></div></div>`;
-        console.error(err);
-      }
-    });
-  </script>
+    <script>
+        function fetchRepositories() {
+            // Simulate API call with timeout
+            setTimeout(() => {
+                // Mock data for demonstration
+                const mockData = [
+                    {
+                        name: 'awesome-project',
+                        description: 'A curated list of awesome resources for developers',
+                        stargazers_count: 3421,
+                        forks_count: 876,
+                        language: 'JavaScript',
+                        html_url: 'https://github.com/user/awesome-project'
+                    },
+                    {
+                        name: 'web-app',
+                        description: 'A modern web application built with React and Node.js',
+                        stargazers_count: 1245,
+                        forks_count: 321,
+                        language: 'TypeScript',
+                        html_url: 'https://github.com/user/web-app'
+                    },
+                    {
+                        name: 'data-analysis',
+                        description: 'Python scripts for analyzing large datasets',
+                        stargazers_count: 987,
+                        forks_count: 254,
+                        language: 'Python',
+                        html_url: 'https://github.com/user/data-analysis'
+                    },
+                    {
+                        name: 'css-framework',
+                        description: 'A lightweight CSS framework for modern websites',
+                        stargazers_count: 2103,
+                        forks_count: 543,
+                        language: 'CSS',
+                        html_url: 'https://github.com/user/css-framework'
+                    },
+                    {
+                        name: 'mobile-app',
+                        description: 'Cross-platform mobile app using React Native',
+                        stargazers_count: 765,
+                        forks_count: 189,
+                        language: 'TypeScript',
+                        html_url: 'https://github.com/user/mobile-app'
+                    },
+                    {
+                        name: 'machine-learning',
+                        description: 'Implementation of various machine learning algorithms',
+                        stargazers_count: 4321,
+                        forks_count: 1023,
+                        language: 'Python',
+                        html_url: 'https://github.com/user/machine-learning'
+                    },
+                    {
+                        name: 'cli-tool',
+                        description: 'Command line interface for simplifying tasks',
+                        stargazers_count: 567,
+                        forks_count: 123,
+                        language: 'Go',
+                        html_url: 'https://github.com/user/cli-tool'
+                    },
+                    {
+                        name: 'portfolio-site',
+                        description: 'Personal portfolio website with modern design',
+                        stargazers_count: 321,
+                        forks_count: 78,
+                        language: 'HTML',
+                        html_url: 'https://github.com/user/portfolio-site'
+                    },
+                    {
+                        name: 'api-service',
+                        description: 'RESTful API service for data management',
+                        stargazers_count: 1023,
+                        forks_count: 256,
+                        language: 'JavaScript',
+                        html_url: 'https://github.com/user/api-service'
+                    }
+                ];
+                
+                // Set the repositories
+                document.repositories = mockData;
+                
+                // Filter the repositories based on search query
+                function filterRepositories(query) {
+                    if (!query) return mockData;
+                    
+                    return mockData.filter(repo => 
+                        repo.name.toLowerCase().includes(query.toLowerCase()) ||
+                        (repo.description && repo.description.toLowerCase().includes(query.toLowerCase()))
+                    );
+                }
+                
+                // Update the filteredRepositories
+                function updateFilteredRepositories() {
+                    const query = document.searchQuery.toLowerCase();
+                    const filtered = filterRepositories(query);
+                    document.filteredRepositories = filtered;
+                }
+                
+                // Watch for changes to searchQuery and update filteredRepositories
+                document.addEventListener('updateSearch', updateFilteredRepositories);
+                
+                // Initialize filteredRepositories
+                document.updateFilteredRepositories();
+                
+                // Stop loading
+                document.loading = false;
+            }, 1500);
+        }
+        
+        // Helper function to get language class
+        function getLanguageClass(language) {
+            if (!language) return 'bg-gray-200 dark:bg-gray-700';
+            
+            switch(language.toLowerCase()) {
+                case 'javascript':
+                case 'js':
+                    return 'js';
+                case 'typescript':
+                case 'ts':
+                    return 'ts';
+                case 'python':
+                    return 'python';
+                case 'html':
+                    return 'html';
+                case 'css':
+                    return 'css';
+                case 'java':
+                    return 'bg-orange-500 dark:bg-orange-700';
+                case 'c':
+                case 'c++':
+                    return 'bg-blue-500 dark:bg-blue-700';
+                case 'rb':
+                    return 'bg-purple-500 dark:bg-purple-700';
+                case 'swift':
+                    return 'bg-indigo-500 dark:bg-indigo-700';
+                case 'php':
+                    return 'bg-yellow-500 dark:bg-yellow-700';
+                case 'go':
+                    return 'bg-blue-400 dark:bg-blue-600';
+                case 'rust':
+                    return 'bg-red-500 dark:bg-red-700';
+                default:
+                    return 'bg-gray-200 dark:bg-gray-700';
+            }
+        }
+    </script>
 </body>
 </html>
